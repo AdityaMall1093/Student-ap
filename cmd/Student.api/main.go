@@ -25,9 +25,11 @@ func main() {
 	}
 
 	err := server.ListenAndServe()
+
+	fmt.Println("server started")
 	if err != nil {
 		log.Fatal("Failed to start server")
 	}
-	fmt.Println("server started")
+	fmt.Println("server")
 
 }
