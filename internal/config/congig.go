@@ -2,7 +2,10 @@ package config
 
 import (
 	"flag"
+	"log"
 	"os"
+
+	"github.com/ilyakaznacheev/cleanenv"
 )
 
 type HTTPServer struct {
@@ -10,24 +13,35 @@ type HTTPServer struct {
 }
 
 type Config struct {
-	Env string `yaml:"env" env:"Env" env-required:"true"`
-
-	StoragePath string `yaml:"storage_path" env-required:"true"`
-
-	HTTPServer `yaml:"http_server"`
+	Env         string `yaml:"env" env:"ENV" env-required:"true"`
+	StoragePath string `yaml:"storage_path" env:"STORAGE_PATH" env-required:"true"`
+	HTTPServer  `yaml:"http_server"`
 }
 
-func MustLoad() {
-	var configPath string
-
-	configPath = os.Getenv("CONFIG_PATH")
+func MustLoad() *Config {
+	configPath := os.Getenv("CONFIG_PATH")
 
 	if configPath == "" {
-		flag := flag.String("config", "", "path to the congiguration file")
-
+		flags := flag.String("config", "", "path to the configuration file")
 		flag.Parse()
 
-		configPath = *flag
-	}
+		configPath = *flags
 
+		if configPath == "" {
+			log.Fatal("config path is not set")
+		}
+	}
+	// if_,err:=os.Stat(configPath); os.IsNotExist(err) {
+	//   log.Fatalf("config file does not exit:%s",configPath)
+
+	if _, err := os.Stat(configPath); os.IsNotExist(err) {
+		log.Fatalf("config file does not exist: %s", configPath)
+	}
+	var cfg Config
+
+	err := cleanenv.ReadConfig(configPath, &cfg)
+	if err != nil {
+		log.Fatalf("can not read config file:%s", err.Error())
+	}
+	return &cfg
 }
