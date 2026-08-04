@@ -11,7 +11,10 @@ import (
 	"syscall"
 	"time"
 
+	// student "github.com/Adityamall1093/student-api/internal/http/handlers"
+	// "github.com/Adityamall1093/student-api/internal/config"
 	"github.com/Adityamall1093/student-api/internal/config"
+	student "github.com/Adityamall1093/student-api/internal/http/handlers"
 )
 
 func main() {
@@ -22,9 +25,7 @@ func main() {
 	// router.HandleFunc("GET/", func(w http.ResponseWriter, r *http.Request) {
 	// 	w.Write([]byte("welcome to student api"))
 	// })
-	router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Welcome to Student API"))
-	})
+	router.HandleFunc("POST /api/student", student.New())
 
 	//setup server
 
@@ -37,7 +38,7 @@ func main() {
 		Addr:    cfg.Addr,
 		Handler: router,
 	}
-	slog.Info("server started %s", cfg.Addr)
+	slog.Info("server started ", slog.String("address", cfg.Addr))
 
 	fmt.Printf("server started %s", cfg.Addr)
 
