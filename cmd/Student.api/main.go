@@ -15,10 +15,19 @@ import (
 	// "github.com/Adityamall1093/student-api/internal/config"
 	"github.com/Adityamall1093/student-api/internal/config"
 	student "github.com/Adityamall1093/student-api/internal/http/handlers"
+	sqlite "github.com/Adityamall1093/student-api/internal/storage/squlite"
 )
 
 func main() {
 	cfg := config.MustLoad()
+
+	// db
+	_, err := sqlite.New(cfg)
+	if err != nil {
+		log.Fatal(err)
+	}
+	slog.Info("storage intialized", slog.String("version", "1.0.1"))
+	// setup router
 
 	router := http.NewServeMux()
 

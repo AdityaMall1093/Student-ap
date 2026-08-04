@@ -32,7 +32,7 @@ func New() http.HandlerFunc {
 		}
 		//request validation
 
-		w.Write([]byte("Welcome to Student API"))
+		// w.Write([]byte("Welcome to Student API"))
 
 		// if err := validator.New().Struct(student); err != nil {
 		// 	validateErrs := err.(validator.ValidationErrors)
